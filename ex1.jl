@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.9
+# v0.19.11
 
 using Markdown
 using InteractiveUtils
@@ -16,7 +16,7 @@ end
 
 # ╔═╡ 1ce61c21-455a-43d3-89ef-334ce6b025af
 begin
-	using CSV, DataFrames
+	using CSV, DataFrames, Downloads
 	using GZip
 	using LinearAlgebra, PDMats
 	using Optim#, ForwardDiff
@@ -42,14 +42,18 @@ TableOfContents()
 md"""
 ## Overview
 
-In this lab, we'll analyze measurements of the transit times of the planet Kepler-26b (also known as KOI 250.01) from [Holczer et al. (2016)](https://ui.adsabs.harvard.edu/abs/2016ApJS..225....9H/abstract).
-First, we'll read the data and check that it meets our expectations.
-Second, we'll develop a statistical model to describe our data based on our understanding of the astrophysics and measurement process.
-We'll compute the maximum likelihood estimate for the model parameters using conventional linear algebra techniques.  This is a *very* useful and common method.
-(I'd say its analogous the harmonic oscillator in physics!)
-Next, we'll demonstrate how to fit the same model, but phrased as an optimization problem.
-This approach opens the door to fitting much more complex models, but is more computationally expensive and introduces new caveats.
-You'll think about a few of these complications (e.g., choice of initial guess, checking for convergence, precision of result).
+In this lab, we'll analyze measurements of the transit times of the planets Kepler-26b and Kepler-26c (also known as KOI 250.01 and 250.02) from [Holczer et al. (2016)](https://ui.adsabs.harvard.edu/abs/2016ApJS..225....9H/abstract).
+First, we'll read the data and check that it meets our basic expectations.
+Second, we'll find the best-fit linear transit model (using model and methods from [Lab 3](https://github.com/PsuAstro497/lab3-start)).
+Third, we'll inspect the residuals, the differences between the observations and the predictions of the linear transit model.  
+Next, you'll identify some outliers and refit the data excluding the outliers. 
+Then, you'll evaluate whether our initial model is a good model for the data and identify how the physical model could be improved.
+
+Then, you'll fit a non-linear transit time model to the transit times for each planet.  
+Since it's a non-linear model, there may be some fiddling around to find a good quality fit.  
+Once you find a good fit, then you'll reassess whether the new model is a good description of the data.
+Finally, you'll propose how the model could be further improved.  
+In a real science research project, the process would repeat all over again!  
 """
 
 # ╔═╡ 3db2e957-8061-42e7-a6c6-7ec4bcf8c1c1
@@ -84,13 +88,21 @@ $${\rm loss} =  \sum_{n=1}^{N_{\rm obs}} \left(\frac{\Delta t_n}{σ_n}\right)^2$
 
 # ╔═╡ 56bc003b-1800-4354-9dc0-1073389eb763
 md"""
-Below is a function that computes the maximum likelihood estimates for $(t_0, P)$ from a DataFrame containing the transit number (`n`), measured time (`t`), and measurement uncertainty (`σₜ`).  It uses `calc_mle_linear_model` and `predict_linear_model` from Lab 3 to perform the required linear algebra.  That and other helper functions that we'll use are copied near the bottom of the notebook.
+Below is a function that computes the maximum likelihood estimates for $(t_0, P)$ from a DataFrame containing the transit number (`n`), measured time (`t`), and measurement uncertainty (`σₜ`).  It uses `calc_mle_linear_model` and `predict_linear_model` from Lab 3 to perform the required linear algebra.  Those and other helper functions that we'll use are copied near the bottom of the notebook.
 """
+
+# ╔═╡ 98d2e83e-ddab-4e65-ba6b-72a36941fc2f
+aside(tip(md"""Sometimes you want a function to return more than one output.  
+While you could just return a [`tuple`](https://docs.julialang.org/en/v1/manual/functions/#Tuples) of variables, that risks the user getting confused.  (E.g., "Are the predictions the third variable?  Or the fourth?" 
+It's safer to use a [`NamedTuple`](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple), so that you can refer to variables by name and reduce the risk of programing mistakes."""), v_offset=-280)
 
 # ╔═╡ 89bd1bff-5066-4a6b-a797-b5a595d899f7
 md"""
 ### Ingest the data
 """
+
+# ╔═╡ ada6fd8b-5e4c-425c-bb73-3e39cefbeaae
+aside(tip(md"""This notebook is downloading and loading a list of transit times for many Kepler planet candidates.  Here, we're picking just those for the two planets that we'll be investigating in this lab.  It may be useful to come back to see how this was done, if you choose to analyze transit timing variation data for your project."""), v_offset=-150)
 
 # ╔═╡ 5525c12c-bd94-4e73-a2f1-f80d035ceb20
 md"""
@@ -353,7 +365,7 @@ end
 
 # ╔═╡ be79db48-50b5-4db7-b328-c2c98d600b5c
 md"""
-**Q2f:** How do the fitted values of `P_ttv_1` and `P_ttv_2` compare?  What does this suggest for a possible way to update the model for TTVs in the KOI 250 system?
+**Q2f:** How do the fitted values of `P_ttv_1` and `P_ttv_2` compare?  What does this suggest for a possible way to update the model for TTVs in the KOI 250 system?  Describe a physical principle that motivates such an update to your model."
 """
 
 # ╔═╡ bf011b9a-5704-4240-9f07-62b1eaa88fda
@@ -392,6 +404,22 @@ response_2h = missing
 if ismissing(response_2h)
 	still_missing()
 end
+
+# ╔═╡ 52cc87b7-c82f-4c98-aa38-f2d9d946c001
+md"""
+**Q2i:** Propose an update to the measurement model that might result in a better model for this dataset.
+"""
+
+# ╔═╡ ecb5fdcc-4a89-4891-b215-1c5a28e2ca4d
+response_2i = missing
+
+# ╔═╡ 54dc381e-764b-463a-a7d3-2dc1383f8191
+if ismissing(response_2i)
+	still_missing()
+end
+
+# ╔═╡ d4a85fe3-d55e-4355-9cd9-26520c2bc2dd
+correct(md"Good job reaching the end of this lab.  If you're running tight on time, then you might just glance at the code below.  But if have some time and are interested (either now or once you start your project), it might be useful to see how the non-linear optimization was performed. ")
 
 # ╔═╡ 4d8c444c-e2b9-4a51-acaa-983e77b439ac
 md"""### Code for running optimizer with non-linear model"""
@@ -779,6 +807,7 @@ CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 GZip = "92fee26a-97fe-5a0c-ad85-20a5f3185b63"
 LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
@@ -812,7 +841,7 @@ StatsPlots = "~0.15.1"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.7.0"
+julia_version = "1.7.1"
 manifest_format = "2.0"
 
 [[deps.AbstractFFTs]]
@@ -2213,8 +2242,10 @@ version = "1.4.1+0"
 # ╟─3db2e957-8061-42e7-a6c6-7ec4bcf8c1c1
 # ╟─56bc003b-1800-4354-9dc0-1073389eb763
 # ╠═8e777eec-cc31-41a2-9e47-a8d14000e7eb
+# ╟─98d2e83e-ddab-4e65-ba6b-72a36941fc2f
 # ╟─89bd1bff-5066-4a6b-a797-b5a595d899f7
 # ╠═a29b8167-c47b-4237-889e-d02463c35faa
+# ╟─ada6fd8b-5e4c-425c-bb73-3e39cefbeaae
 # ╟─22908773-6ed9-4ac3-a8e9-3d93a8403a19
 # ╟─5525c12c-bd94-4e73-a2f1-f80d035ceb20
 # ╟─6dad7704-8ddb-4c12-8bbd-40f882307da3
@@ -2281,6 +2312,10 @@ version = "1.4.1+0"
 # ╟─0bc5c48d-7c98-40e9-baec-da49dafe90d4
 # ╠═7ddc2d6e-d665-4456-bbac-64de62e5538f
 # ╟─0a936baf-29a8-431e-a6d3-888aa13d85ae
+# ╟─52cc87b7-c82f-4c98-aa38-f2d9d946c001
+# ╠═ecb5fdcc-4a89-4891-b215-1c5a28e2ca4d
+# ╟─54dc381e-764b-463a-a7d3-2dc1383f8191
+# ╟─d4a85fe3-d55e-4355-9cd9-26520c2bc2dd
 # ╟─4d8c444c-e2b9-4a51-acaa-983e77b439ac
 # ╠═4ac21f2f-2727-4859-8104-7c9a6bf13249
 # ╠═5f90e2af-8dc6-4571-bc74-c7f7c2667b55
