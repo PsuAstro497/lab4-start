@@ -422,6 +422,17 @@ if ismissing(response_2i)
 	still_missing()
 end
 
+# ╔═╡ 10eb9d03-0b60-48c9-aadf-225787c09e15
+md"""**Q2j:**  Try flagging one more point as an outlier (or removing one point from your list of outliers to exclude from the analysis).  How much do the best-fit parameter values change?"""
+
+# ╔═╡ a42e095e-4e5e-48a0-99d9-ba7a819e0a36
+response_2j = missing
+
+# ╔═╡ 16dc0287-d774-4af5-8aed-bf648f947bb2
+if ismissing(response_2j)
+	still_missing()
+end
+
 # ╔═╡ d4a85fe3-d55e-4355-9cd9-26520c2bc2dd
 correct(md"Good job reaching the end of this lab.  If you're running tight on time, then you might just glance at the code below.  But if have some time and are interested (either now or once you start your project), it might be useful to see how the non-linear optimization was performed. ")
 
@@ -2320,6 +2331,9 @@ version = "1.4.1+0"
 # ╟─52cc87b7-c82f-4c98-aa38-f2d9d946c001
 # ╠═ecb5fdcc-4a89-4891-b215-1c5a28e2ca4d
 # ╟─54dc381e-764b-463a-a7d3-2dc1383f8191
+# ╟─10eb9d03-0b60-48c9-aadf-225787c09e15
+# ╠═a42e095e-4e5e-48a0-99d9-ba7a819e0a36
+# ╟─16dc0287-d774-4af5-8aed-bf648f947bb2
 # ╟─d4a85fe3-d55e-4355-9cd9-26520c2bc2dd
 # ╟─4d8c444c-e2b9-4a51-acaa-983e77b439ac
 # ╠═4ac21f2f-2727-4859-8104-7c9a6bf13249
