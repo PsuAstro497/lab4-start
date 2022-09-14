@@ -120,6 +120,10 @@ md"""
 Below, we'll plot the residuals of our linear transit time model versus the transit number.
 """
 
+# ╔═╡ 3cca33ce-3a72-4c91-bb77-9d09dd10102a
+md"Some points are differ from the predictions of our linear model by much, much more than the reported measurement uncertainties.   This could be due to a variety of reasons (e..g, poor detrending of the flux around the times, star spots two transits of different planest happening simultaneously or close in time to each other, a failure of the transit time fitting model to find the global minimum, etc.). 
+ If we were to analyze the full data set using the linear transit time model and assuming Gaussian measurement uncertainties, then we're bound to have problems.  One common strategy for cleaning datasets is to identify and exclude outliers.  You'll do that next."
+
 # ╔═╡ c1341cd6-c50e-4aa6-8bfd-50e5ec525792
 md"### Identify outliers"
 
@@ -265,17 +269,17 @@ elseif !type_isa(B_1,Real)
 elseif !type_isa(P_ttv_1,Real)
 	wrong_type(:P_ttv_1, Float64)
 elseif !(65.5<t0_1<66.6)
-	keep_working(md"Your value of `t0_1` doesn't appear to be correct.")
+	keep_working(md"Your value of `t0_1` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 elseif !(12.23<P_orb_1<12.33)
-	keep_working(md"Your value of `P_orb_1` doesn't appear to be correct.")
+	keep_working(md"Your value of `P_orb_1` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 elseif !(-0.004<A_1<-0.003)
-	keep_working(md"Your value of `A_1` doesn't appear to be correct.")
+	keep_working(md"Your value of `A_1` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 elseif !(0.006<B_1<0.007)
-	keep_working(md"Your value of `B_1` doesn't appear to be correct.")
+	keep_working(md"Your value of `B_1` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 elseif !(700<P_ttv_1<800)
-	keep_working(md"Your value of `P_ttv_1` doesn't appear to be correct.")
+	keep_working(md"Your value of `P_ttv_1` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 else
-	correct(md"The parameter values you found are at least close to what I found.")
+	correct(md"The parameter values you found are at least close to what I found.  Everyone may get slightly different results because of which points they labeled as outliers.  So you'll still want to make sure that you get a good fit.")
 end
 
 # ╔═╡ 28d85b44-eb10-4709-ab95-30d839a392d8
@@ -330,18 +334,18 @@ elseif !type_isa(B_2,Real)
 	wrong_type(:B_2, Float64)
 elseif !type_isa(P_ttv_2,Real)
 	wrong_type(:P_ttv_2, Float64)
-elseif !(66.5<t0_2<66.6)
-	keep_working(md"Your value of `t0_2` doesn't appear to be correct.")
+elseif !(65.5<t0_2<66.6) 65.635
+	keep_working(md"Your value of `t0_2` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 elseif !(17.15<P_orb_2<17.35)
-	keep_working(md"Your value of `P_orb_2` doesn't appear to be correct.")
+	keep_working(md"Your value of `P_orb_2` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 elseif !(0.003<A_2<0.004)
-	keep_working(md"Your value of `A_2` doesn't appear to be correct.")
+	keep_working(md"Your value of `A_2` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 elseif !(-0.007<B_2<-0.005)
-	keep_working(md"Your value of `B_2` doesn't appear to be correct.")
+	keep_working(md"Your value of `B_2` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 elseif !(700<P_ttv_2<750)
-	keep_working(md"Your value of `P_ttv_2` doesn't appear to be correct.")
+	keep_working(md"Your value of `P_ttv_2` differs from what I found.  This doesn't mean it's necessarily wrong (since you might have labeled a slightly different set of points as outliers).  But I would suggest experimenting a little more to see if you can find a better fit.")
 else
-	correct(md"The parameter values you found are close to what I found.")
+	correct(md"The parameter values you found are at least close to what I found.  Everyone may get slightly different results because of which points they labeled as outliers.  So you'll still want to make sure that you get a good fit..")
 end
 
 # ╔═╡ b0503c4e-1562-441e-adaf-ff96de5ce7e1
@@ -415,6 +419,17 @@ response_2i = missing
 
 # ╔═╡ 54dc381e-764b-463a-a7d3-2dc1383f8191
 if ismissing(response_2i)
+	still_missing()
+end
+
+# ╔═╡ 10eb9d03-0b60-48c9-aadf-225787c09e15
+md"""**Q2j:**  Try flagging one more point as an outlier (or removing one point from your list of outliers to exclude from the analysis).  How much do the best-fit parameter values change?"""
+
+# ╔═╡ a42e095e-4e5e-48a0-99d9-ba7a819e0a36
+response_2j = missing
+
+# ╔═╡ 16dc0287-d774-4af5-8aed-bf648f947bb2
+if ismissing(response_2j)
 	still_missing()
 end
 
@@ -2253,6 +2268,7 @@ version = "1.4.1+0"
 # ╠═80170ff7-ff10-4e5f-8b93-44a807eddf23
 # ╟─6131e789-13e3-4274-9946-eebb72b65a99
 # ╟─c12370ac-6557-4f19-93f9-7b9ff03276b6
+# ╟─3cca33ce-3a72-4c91-bb77-9d09dd10102a
 # ╟─c1341cd6-c50e-4aa6-8bfd-50e5ec525792
 # ╟─10e5ccf6-47eb-453d-9144-e51d5e5be8b4
 # ╠═a15b8a48-fc33-4f25-b540-cfafa14d1464
@@ -2315,6 +2331,9 @@ version = "1.4.1+0"
 # ╟─52cc87b7-c82f-4c98-aa38-f2d9d946c001
 # ╠═ecb5fdcc-4a89-4891-b215-1c5a28e2ca4d
 # ╟─54dc381e-764b-463a-a7d3-2dc1383f8191
+# ╟─10eb9d03-0b60-48c9-aadf-225787c09e15
+# ╠═a42e095e-4e5e-48a0-99d9-ba7a819e0a36
+# ╟─16dc0287-d774-4af5-8aed-bf648f947bb2
 # ╟─d4a85fe3-d55e-4355-9cd9-26520c2bc2dd
 # ╟─4d8c444c-e2b9-4a51-acaa-983e77b439ac
 # ╠═4ac21f2f-2727-4859-8104-7c9a6bf13249
